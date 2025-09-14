@@ -32,8 +32,8 @@ jobs:
           file: ./dockerfile
           push: true
           tags: |
-            ghcr.io/thirty-degrees/api-version-unsupported:${{ env.IMAGE_VERSION }}
-            ghcr.io/thirty-degrees/api-version-unsupported:latest
+            ghcr.io/thirty-degrees/api-version-unsupported-colyseus:${{ env.IMAGE_VERSION }}
+            ghcr.io/thirty-degrees/api-version-unsupported-colyseus:latest
           platforms: linux/arm64
-          cache-from: type=registry,ref=ghcr.io/thirty-degrees/api-version-unsupported:buildcache
-          cache-to: type=registry,ref=ghcr.io/thirty-degrees/api-version-unsupported:buildcache,mode=max
+          cache-from: type=registry,ref=ghcr.io/thirty-degrees/api-version-unsupported-colyseus:buildcache
+          cache-to: type=registry,ref=ghcr.io/thirty-degrees/api-version-unsupported-colyseus:buildcache,mode=max
