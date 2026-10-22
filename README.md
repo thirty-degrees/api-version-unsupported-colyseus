@@ -5,3 +5,8 @@ A minimal nginx service that returns a standardized error response for unsupport
 ## Special case for colyseus routes
 
 - For routes beginning with /matchmake, the error is returned in the format which colyseus expects
+
+## Deployment
+
+Pushes to `main` build an ARM64 image and deploy it through
+[`Calfur/calfur-dev`](https://github.com/Calfur/calfur-dev).
