@@ -1,4 +1,4 @@
-name: Build docker image
+name: Build and deploy API fallback image
 
 on:
   push:
@@ -37,3 +37,26 @@ jobs:
           platforms: linux/arm64
           cache-from: type=registry,ref=ghcr.io/thirty-degrees/api-version-unsupported-colyseus:buildcache
           cache-to: type=registry,ref=ghcr.io/thirty-degrees/api-version-unsupported-colyseus:buildcache,mode=max
+
+  trigger-deployment:
+    needs: build-docker-image
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions: {}
+    steps:
+      - name: Check deployment trigger token
+        env:
+          DEPLOY_TRIGGER_TOKEN: ${{ secrets.GH_PAT_ACTIONS_TRIGGER }}
+        run: |
+          if [ -z "$DEPLOY_TRIGGER_TOKEN" ]; then
+            echo "::error::Configure GH_PAT_ACTIONS_TRIGGER with access to Calfur/calfur-dev to trigger deployment."
+            exit 1
+          fi
+
+      - name: Trigger image update in Calfur/calfur-dev
+        uses: peter-evans/repository-dispatch@v4
+        with:
+          token: ${{ secrets.GH_PAT_ACTIONS_TRIGGER }}
+          repository: Calfur/calfur-dev
+          event-type: new-api-version-unsupported-colyseus-image
+          client-payload: '{"image_version": "${{ env.IMAGE_VERSION }}"}'
